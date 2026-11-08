@@ -1,4 +1,5 @@
 -- 1. Create the superstore_staging table
+DROP TABLE IF EXISTS superstore_staging;
 CREATE TABLE superstore_staging (
 	row_id 			TEXT,
 	order_id 		TEXT,
