@@ -98,7 +98,17 @@ Each row also carries details about the order, the product, and the customer, wh
 ## Key Findings
 
 ### 1. Revenue by Category and Sub-Category
-*[Finding]*
+| Category | Revenue | Share |
+|---|---|---|
+| Technology | $836,154.03 | 36.4% |
+| Furniture | $741,999.80 | 32.3% |
+| Office Supplies | $719,047.03 | 31.3% |
+
+**Revenue is balanced across categories but concentrated in a few sub-categories.** The three categories are within about five percentage points of each other, so no category dominates. At the sub-category level the picture changes: Phones ($330,007.05, 14.4%) and Chairs ($328,449.10, 14.3%) together bring in nearly 29% of all revenue, and the top four sub-categories (Phones, Chairs, Storage, Tables) account for about 47% of revenue across 17 sub-categories.
+
+Office Supplies has the most sub-categories (9) but the lowest revenue. Its five smallest (Supplies, Art, Envelopes, Labels and Fasteners) together contribute less than 5% of revenue, with Fasteners the lowest at $3,024.28 (0.1%).
+
+*Note: this analysis covers revenue only. Profitability by category and sub-category may tell a different story.*
 
 ### 2. Top 10 Customers by Lifetime Spend
 *[Finding]*
