@@ -98,17 +98,19 @@ Each row also carries details about the order, the product, and the customer, wh
 ## Key Findings
 
 ### 1. Revenue by Category and Sub-Category
-| Category | Revenue | Share |
-|---|---|---|
-| Technology | $836,154.03 | 36.4% |
-| Furniture | $741,999.80 | 32.3% |
-| Office Supplies | $719,047.03 | 31.3% |
+*SQL: [`sql/04_revenue_by_category.sql`](sql/04_revenue_by_category.sql)*
 
-**Revenue is balanced across categories but concentrated in a few sub-categories.** The three categories are within about five percentage points of each other, so no category dominates. At the sub-category level the picture changes: Phones ($330,007.05, 14.4%) and Chairs ($328,449.10, 14.3%) together bring in nearly 29% of all revenue, and the top four sub-categories (Phones, Chairs, Storage, Tables) account for about 47% of revenue across 17 sub-categories.
+| Category | Revenue | Share of Revenue | Line Items | Share of Line Items | Avg Revenue per Line Item |
+|---|---|---|---|---|---|
+| Technology | $836,154.03 | 36.40% | 1,847 | 18.48% | $452.71 |
+| Furniture | $741,999.80 | 32.30% | 2,121 | 21.22% | $349.83 |
+| Office Supplies | $719,047.03 | 31.30% | 6,026 | 60.30% | $119.32 |
 
-Office Supplies has the most sub-categories (9) but the lowest revenue. Its five smallest (Supplies, Art, Envelopes, Labels and Fasteners) together contribute less than 5% of revenue, with Fasteners the lowest at $3,024.28 (0.1%).
+**Revenue is evenly split across categories, but each category gets there differently.** Technology generates the largest share of revenue (36.40%) from the smallest share of line items (18.48%), driven by the highest average revenue per line item. Office Supplies is the opposite: it accounts for 60.30% of line items but only 31.30% of revenue, making it a high-volume, low-value category.
 
-*Note: this analysis covers revenue only. Profitability by category and sub-category may tell a different story.*
+**At the sub-category level, revenue is concentrated.** Phones ($330,007.05, 14.37%) and Chairs together bring in nearly 29% of revenue, and the top four sub-categories (Phones, Chairs, Storage, Tables) account for about 47%. At the other end, Fasteners is the smallest sub-category at $3,024.28 (0.13%).
+
+*Note: this analysis covers revenue only; profitability by category may tell a different story.*
 
 ### 2. Top 10 Customers by Lifetime Spend
 *[Finding]*
