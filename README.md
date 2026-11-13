@@ -113,10 +113,44 @@ Each row also carries details about the order, the product, and the customer, wh
 *Note: this analysis covers revenue only; profitability by category may tell a different story.*
 
 ### 2. Top 10 Customers by Lifetime Spend
-*[Finding]*
+*SQL: [`sql/05_top_customers.sql`](sql/05_top_customers.sql)*
+
+| Rank | Customer | Lifetime Sales | Orders | Avg Sales per Order | Share of Total Revenue |
+|---|---|---|---|---|---|
+| 1 | Sean Miller | $25,043.05 | 5 | $5,008.61 | 1.09% |
+| 2 | Tamara Chand | $19,052.22 | 5 | $3,810.44 | 0.83% |
+| 3 | Raymond Buch | $15,117.34 | 6 | $2,519.56 | 0.66% |
+| 4 | Tom Ashbrook | $14,595.62 | 4 | $3,648.91 | 0.64% |
+| 5 | Adrian Barton | $14,473.57 | 10 | $1,447.36 | 0.63% |
+| 6 | Ken Lonsdale | $14,175.23 | 12 | $1,181.27 | 0.62% |
+| 7 | Sanjit Chand | $14,142.33 | 9 | $1,571.37 | 0.62% |
+| 8 | Hunter Lopez | $12,873.30 | 6 | $2,145.55 | 0.56% |
+| 9 | Sanjit Engle | $12,209.44 | 11 | $1,109.95 | 0.53% |
+| 10 | Christopher Conant | $12,129.07 | 5 | $2,425.81 | 0.53% |
+
+**No single customer drives the business.** The top 10 customers together account for only 6.70% of total revenue ($153,811.17), and the largest, Sean Miller, accounts for 1.09%. Revenue is spread across a broad customer base, so the business does not depend on any one account.
+
+**Two customers stand out, and the rest are closely grouped.** Sean Miller and Tamara Chand are well ahead of the rest, together making up 28.67% of top-10 sales. Customers #3 to #10 fall within about $3,000 of each other ($12,129.07 to $15,117.34).
+
+**Top customers reach their totals in two different ways.** Some place a few large orders: Sean Miller's 5 orders average $5,008.61, and Tom Ashbrook's 4 orders average $3,648.91. Others order often at lower values: Ken Lonsdale placed 12 orders averaging $1,181.27, and Sanjit Engle placed 11 orders averaging $1,109.95. A loyalty or account-management approach would need to account for both groups.
+
+*Note: customers are ranked by revenue only, so the most valuable customers by profit may differ. Customers are grouped by `customer_id`, so two customers with the same name are counted separately.*
 
 ### 3. Month-over-Month Revenue
-*[Finding]*
+*SQL: [`sql/06_monthly_revenue_trend.sql`](sql/06_monthly_revenue_trend.sql)*
+
+| Year | Revenue | Change vs. Prior Year | Months Above Same Month Prior Year |
+|---|---|---|---|
+| 2014 | $484,247.51 | — | — |
+| 2015 | $470,532.51 | -2.83% | 6 of 12 |
+| 2016 | $609,205.60 | +29.47% | 11 of 12 |
+| 2017 | $733,215.26 | +20.36% | 8 of 12 |
+
+**Month to month, revenue follows a seasonal cycle rather than steady growth.** Revenue rose in only 21 of 47 months, and the same pattern repeats every year. January or February is always the lowest month, with January falling 55–75% from December. March rebounds by 125–224% (2015–2017), and September, November and December are the three highest-revenue months every year. The peak was November 2017 at $118,447.83. The largest swing, +1,132.13% in March 2014, reflects an unusually low February 2014 ($4,519.89) rather than an exceptional March.
+
+**Year over year, the business is growing.** After a 2.83% dip in 2015, annual revenue grew 29.47% in 2016 and 20.36% in 2017, ending 51.41% above 2014. In 2016, 11 of 12 months beat the same month a year earlier. Individual months still vary widely, from -30.46% to +164.42%, so annual totals and same-month comparisons give a more reliable read of growth than month-over-month change.
+
+*Note: because of this seasonality, the weekly report should compare each period with the same period last year rather than with the period just before it.*
 
 ### 4. Regional Performance vs. Target
 *Target definition: [explain how the target was set and why]*
