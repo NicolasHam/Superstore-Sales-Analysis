@@ -1,9 +1,9 @@
 # Superstore Sales Analysis
 
 ## Project Overview
-As a junior analyst at a retail company, I was asked to build the SQL behind a weekly sales report for my manager. Using four years of transactional sales data, I analyzed revenue trends, customer value, regional performance, and discounting practices to identify where the business is growing and where it is falling short.
+This project is an end-to-end SQL analysis of four years of transactional sales data from a US retail company. I approached it the way I would a request from a business stakeholder: the company needs the SQL behind a weekly sales report and wants to know where it is growing, where it is falling short, and what to do about it. The analysis covers revenue by product, customer value, regional performance, and the effect of discounting on profit, and ends with recommendations the business could act on.
 
-The project covers the full analyst workflow: loading raw data into a database, profiling it for quality issues, modelling it into clean relational tables, and answering business questions with SQL.
+In my current role in the federal public sector, I analyze transaction data for compliance monitoring and spend reporting. I built this project to apply those skills in a commercial setting and to deepen my SQL in PostgreSQL. It covers the full analyst workflow: loading raw data into a database, profiling it for quality issues, modelling it into clean relational tables, and answering business questions with SQL.
 
 ---
 
@@ -13,7 +13,6 @@ The project covers the full analyst workflow: loading raw data into a database, 
 3. How does revenue compare month over month?
 4. Which regions are underperforming against target?
 5. What is the average order value for each customer segment?
-6. Which orders received unusually high discounts?
 
 ---
 
@@ -110,7 +109,7 @@ Each row also carries details about the order, the product, and the customer, wh
 
 **At the sub-category level, revenue is concentrated.** Phones ($330,007.05, 14.37%) and Chairs together bring in nearly 29% of revenue, and the top four sub-categories (Phones, Chairs, Storage, Tables) account for about 47%. At the other end, Fasteners is the smallest sub-category at $3,024.28 (0.13%).
 
-*Note: this analysis covers revenue only; profitability by category may tell a different story.*
+*Note: this analysis covers revenue only. Profit by category is covered in Finding 4: Furniture brings in 32.30% of revenue but only 6.44% of profit.*
 
 ### 2. Top 10 Customers by Lifetime Spend
 *SQL: [`sql/05_top_customers.sql`](sql/05_top_customers.sql)*
@@ -152,23 +151,59 @@ Each row also carries details about the order, the product, and the customer, wh
 
 *Note: because of this seasonality, the weekly report should compare each period with the same period last year rather than with the period just before it.*
 
-### 4. Regional Performance vs. Target
-*Target definition: [explain how the target was set and why]*
+### 4. Regional Performance
+*SQL: [`sql/07_regional_performance.sql`](sql/07_regional_performance.sql)*
+ 
+| Region | Total Profit | Share of Profit | Orders | Share of Orders | Profit per Order | Avg Discount (sales-weighted) |
+|---|---|---|---|---|---|---|
+| West | $108,418.45 | 37.86% | 1,611 | 32.16% | $67.30 | 12.88% |
+| East | $91,522.78 | 31.96% | 1,401 | 27.97% | $65.33 | 13.94% |
+| South | $46,749.43 | 16.32% | 822 | 16.41% | $56.87 | 14.49% |
+| Central | $39,706.36 | 13.86% | 1,175 | 23.46% | $33.79 | 15.52% |
+ 
+**Central is the weakest region, and the problem is profit per order, not volume.** Central earns the least profit (13.86% of the total) despite handling 23.46% of orders, more than South. Its profit per order of $33.79 is half of West's and well below the company-wide average of $57.18. West leads on both volume and profit per order, earning 2.73 times Central's profit.
+ 
+**Profit per order falls as discounts rise.** The regions rank in exactly opposite order on discount and profit per order: West gives the lowest average discount (12.88%) and Central the highest (15.52%). Discount alone does not explain Central's gap, however: it earns $23.08 less per order than South with a discount only 1.03 points higher.
 
-*[Finding]*
+**Profit Margin by Region and Category**
+
+| Region | Technology | Office Supplies | Furniture |
+|---|---|---|---|
+| West | 17.58% | 23.82% | 4.55% |
+| East | 17.91% | 19.96% | 1.46% |
+| South | 13.44% | 15.91% | 5.77% |
+| Central | 19.77% | 5.32% | -1.75% |
+| **All regions** | **17.40%** | **17.04%** | **2.49%** |
+
+**Central's gap comes from its Office Supplies and Furniture margins, not its product mix.** Central's revenue is split almost evenly across Technology (34.00%), Office Supplies (33.32%) and Furniture (32.68%), similar to the other regions. Its Technology margin of 19.77% is the highest of any region. However, it earns only 5.32% on Office Supplies, compared with 15.91–23.82% elsewhere, and loses $2,871.05 on Furniture. If Central's Office Supplies earned the same margin as the other three regions combined (20.58%), its profit would be about $25,500 higher, enough to move it ahead of South.
+
+**Furniture is the least profitable category in every region.** It earns a 2.49% margin company-wide, compared with 17.40% for Technology and 17.04% for Office Supplies. Furniture brings in 32.30% of revenue but only 6.44% of profit, while Technology alone generates 50.79% of profit.
+
+*Note: the dataset contains no regional targets, so regions are compared with each other rather than with a target. The discount pattern is a correlation, not proof of cause. Discount is weighted by sales, so larger orders count more. Average discount by category was not checked, so it is not yet known whether discounting or pricing explains Central's low Office Supplies margin.*
 
 ### 5. Average Order Value by Customer Segment
-*[Finding]*
+*SQL: [`sql/08_aov_by_segment.sql`](sql/08_aov_by_segment.sql)*
 
-### 6. High-Discount Orders
-*Definition of "unusually high": [explain the threshold and why]*
+| Segment | Avg Order Value | Orders | Share of Orders |
+|---|---|---|---|
+| Home Office | $472.67 | 909 | 18.15% |
+| Corporate | $466.41 | 1,514 | 30.23% |
+| Consumer | $449.11 | 2,586 | 51.63% |
 
-*[Finding]*
+**Order value is consistent across segments.** Home Office has the highest average order value ($472.67) and Consumer the lowest ($449.11). The gap is only $23.56, or 5.25%. All three segments are within $15 of the company-wide average of $458.61, so customer segment has little effect on how much is spent per order.
+
+**Segments differ in volume, not order size.** Consumer places 51.63% of all orders, more than Corporate and Home Office combined (2,423). Home Office places the fewest orders (18.15%) despite having the highest average order value. Because order values are so similar, each segment's revenue depends mainly on how many orders it places. Growing a segment means winning more orders rather than larger ones.
+
+*Note: average order value is total sales per order, averaged across orders, and covers revenue only, not profit. An average can be pulled up by a few very large orders (see the top customers in Finding 2), so a median would be a useful check. Order counts total 5,009, matching the order total in Finding 4.*
 
 ---
 
 ## Recommendations
-*[Two or three actions the business could take based on the findings]*
+**1. Fix margins on Office Supplies and Furniture in Central rather than discounting further.** Central gives the highest average discount (15.52%) and earns the lowest profit per order ($33.79). Its product mix is not the cause; its margins are. Central earns 19.77% on Technology, the highest of any region, but only 5.32% on Office Supplies, compared with 15.91–23.82% elsewhere, and it loses money on Furniture (-1.75%). Bringing Office Supplies in line with the other regions would add about $25,500 in profit. The business should review discounts and pricing on Office Supplies and Furniture in Central first. More broadly, Furniture earns only 2.49% company-wide, so it should not be a growth focus until its pricing and discounting are reviewed.
+
+**2. Grow Technology sales by pairing it with high-volume categories.** Technology brings in $452.71 per line item, compared with $119.32 for Office Supplies, but appears on only 18.48% of line items. Office Supplies appears on 60.30%, so customers are already buying from the company often. Bundles or product suggestions that add Technology to these regular purchases could raise revenue per order without broad discounts that cut into profit. Technology also has the highest profit margin of the three categories (17.40%, compared with 17.04% for Office Supplies and 2.49% for Furniture), so growing it adds profit as well as revenue.
+
+**3. Plan promotions and reporting around the seasonal cycle.** September, November and December are the highest-revenue months every year, while January and February are always the lowest. Promotions are more likely to add new orders in the January–February low than in peak months, when customers are already buying. Because segments spend similar amounts per order (Finding 5), growth depends mainly on winning more orders, which makes the slow months the best time to target. The weekly report should compare each period with the same period last year, so seasonal swings are not mistaken for growth or decline.
 
 ---
 
@@ -187,9 +222,8 @@ Superstore-Sales-Analysis/
 │   ├── 04_revenue_by_category.sql       # Q1: Revenue by category and sub-category
 │   ├── 05_top_customers.sql             # Q2: Top 10 customers by lifetime spend
 │   ├── 06_monthly_revenue_trend.sql     # Q3: Month-over-month revenue
-│   ├── 07_regional_performance.sql      # Q4: Regions vs. target
-│   ├── 08_aov_by_segment.sql            # Q5: Average order value by segment
-│   └── 09_high_discount_orders.sql      # Q6: Unusually high discounts
+│   ├── 07_regional_performance.sql      # Q4: Regional performance and profit margin by category
+│   └── 08_aov_by_segment.sql            # Q5: Average order value by segment
 │
 ├── images/
 │   └── erd.png                          # Data model diagram (optional)

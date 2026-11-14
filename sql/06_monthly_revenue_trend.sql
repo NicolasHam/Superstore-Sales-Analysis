@@ -2,7 +2,7 @@
    Purpose: Compares monthly revenue with the previous month (Query 1) and with the same month
             of the previous year (Query 2). Each CTE uses LAG() to add the comparison month's total.
    Tables:  order_lines, orders (joined on order_id)
-   Results: README.md, Q3.
+   Results: Documented in README.md, Q3.
 */
 
 -- Query 1: Does revenue grow steadily from month to month?
