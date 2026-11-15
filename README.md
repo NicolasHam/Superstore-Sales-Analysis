@@ -2,8 +2,10 @@
 
 ## Project Overview
 This project is an end-to-end SQL analysis of four years of transactional sales data from a US retail company. I approached it the way I would a request from a business stakeholder: the company needs the SQL behind a weekly sales report and wants to know where it is growing, where it is falling short, and what to do about it. The analysis covers revenue by product, customer value, regional performance, and the effect of discounting on profit, and ends with recommendations the business could act on.
-
-In my current role in the federal public sector, I analyze transaction data for compliance monitoring and spend reporting. I built this project to apply those skills in a commercial setting and to deepen my SQL in PostgreSQL. It covers the full analyst workflow: loading raw data into a database, profiling it for quality issues, modelling it into clean relational tables, and answering business questions with SQL.
+ 
+In my current role in the federal public sector, I analyze transaction data for compliance monitoring and spend reporting. I built this project to apply those skills in a commercial setting and to deepen my SQL in PostgreSQL. It covers the full analyst workflow: loading raw data into a database, profiling it for quality issues, modelling it into clean relational tables, answering business questions with SQL, and presenting the results in a four-page Power BI report.
+ 
+![Power BI report – Overview page](images/powerbi_overview.png)
 
 ---
 
@@ -87,7 +89,7 @@ Each row also carries details about the order, the product, and the customer, wh
 
 ### 2. Postal codes missing leading zeros
 - **Issue:** 438 line items have a 4-digit `postal_code` instead of the standard 5-digit US ZIP code.
-- **Evidence:** All affected codes belong to states whose ZIP codes begin with 0 ([list the states from your query]). [X] distinct postal codes across [Y] orders are affected. The leading zero was most likely stripped when the file was saved by a tool that treated postal codes as numbers, such as Excel.
+- **Evidence:** All affected codes belong to states whose ZIP codes begin with 0. 51 distinct postal codes across 438 orders are affected. The leading zero was most likely stripped when the file was saved by a tool that treated postal codes as numbers, such as Excel.
 - **Impact:** Affected codes don't match their real ZIP codes, so any lookup, join or map built on postal code would place these orders incorrectly or fail to match them.
 - **Resolution:** `LPAD(postal_code, 5, '0')` restores the leading zero when data is inserted into the `orders` table. The staging table is left unchanged.
 - **Query:** `sql/02_data_profiling.sql`, Check [6]
@@ -204,6 +206,15 @@ Each row also carries details about the order, the product, and the customer, wh
 **2. Grow Technology sales by pairing it with high-volume categories.** Technology brings in $452.71 per line item, compared with $119.32 for Office Supplies, but appears on only 18.48% of line items. Office Supplies appears on 60.30%, so customers are already buying from the company often. Bundles or product suggestions that add Technology to these regular purchases could raise revenue per order without broad discounts that cut into profit. Technology also has the highest profit margin of the three categories (17.40%, compared with 17.04% for Office Supplies and 2.49% for Furniture), so growing it adds profit as well as revenue.
 
 **3. Plan promotions and reporting around the seasonal cycle.** September, November and December are the highest-revenue months every year, while January and February are always the lowest. Promotions are more likely to add new orders in the January–February low than in peak months, when customers are already buying. Because segments spend similar amounts per order (Finding 5), growth depends mainly on winning more orders, which makes the slow months the best time to target. The weekly report should compare each period with the same period last year, so seasonal swings are not mistaken for growth or decline.
+
+---
+
+## Power BI Report
+A four-page Power BI report presents these findings visually. Every figure matches the SQL results above.
+
+- **Report file:** [`powerbi/superstore_sales_report.pbix`](powerbi/superstore_sales_report.pbix)
+- **PDF version:** [`powerbi/superstore_sales_report.pdf`](powerbi/superstore_sales_report.pdf)
+- **Pages:** [Overview](images/powerbi_overview.png) · [Customers](images/powerbi_customers.png) · [Profit & Regions](images/powerbi_profit.png) · [Findings](images/powerbi_findings.png)
 
 ---
 
