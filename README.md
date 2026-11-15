@@ -85,14 +85,14 @@ Each row also carries details about the order, the product, and the customer, wh
 - **Evidence:** Reviewing the pairs showed they are genuinely different products, not spelling variations. Both products under each ID always share the same `category` and `sub_category`, which fits the ID format: the prefix encodes the category and sub-category (e.g. `FUR-BO-`), suggesting numbers were reused within a sub-category.
 - **Impact:** `product_id` cannot be the primary key of the `products` table. Deleting one name per ID would remove 32 products and attach their sales to the wrong product.
 - **Resolution:** A surrogate key (`product_key`) was added as the primary key of `products`. `product_id` is kept as a regular column, so the original identifier is still available. `order_lines` stores `product_key` instead of `product_id`, giving a single-column join to `products`.
-- **Query:** [`sql/02_data_profiling.sql`](sql/02_data_profiling.sql)*, Check 1
+- **Query:** *[`sql/02_data_profiling.sql`](sql/02_data_profiling.sql), Check 1*
 
 ### 2. Postal codes missing leading zeros
 - **Issue:** 438 line items have a 4-digit `postal_code` instead of the standard 5-digit US ZIP code.
 - **Evidence:** All affected codes belong to states whose ZIP codes begin with 0. 51 distinct postal codes across 438 orders are affected. The leading zero was most likely stripped when the file was saved by a tool that treated postal codes as numbers, such as Excel.
 - **Impact:** Affected codes don't match their real ZIP codes, so any lookup, join or map built on postal code would place these orders incorrectly or fail to match them.
 - **Resolution:** `LPAD(postal_code, 5, '0')` restores the leading zero when data is inserted into the `orders` table. The staging table is left unchanged.
-- **Query:** [`sql/02_data_profiling.sql`](sql/02_data_profiling.sql)*, Check [6]
+- **Query:** *[`sql/02_data_profiling.sql`](sql/02_data_profiling.sql), Check 6*
 
 **Also checked (no issues found):** `customer_id`, `order_id` and `row_id` are unique and consistent across all their attributes; key columns and `postal_code` contain no NULL or blank values; and `sales`, `quantity` and `discount` all fall within realistic ranges. See `sql/02_data_profiling.sql` for each check and its result.
 
